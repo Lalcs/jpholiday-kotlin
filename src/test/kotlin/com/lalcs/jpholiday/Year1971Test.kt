@@ -105,7 +105,6 @@ internal class Year1971Test {
 
     @Test
     fun countMonth() {
-        println(jpHoliday.monthHolidays(1971, 3))
         assertEquals(2, jpHoliday.monthHolidays(1971, 1).size)
         assertEquals(1, jpHoliday.monthHolidays(1971, 2).size)
         assertEquals(1, jpHoliday.monthHolidays(1971, 3).size)
