@@ -1,11 +1,13 @@
 package com.lalcs.jpholiday
 
+import com.lalcs.jpholiday.holiday.HolidayInterface
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 
 class JPHoliday {
     private val publicHolidayRegistry = PublicHolidayRegistry
+    private val originalHolidayRegistry = OriginalHolidayRegistry()
 
     fun isHoliday(date: LocalDate): Boolean {
         return resolveHoliday(date).isNotEmpty()
@@ -14,7 +16,11 @@ class JPHoliday {
     fun resolveHoliday(date: LocalDate): List<Holiday> {
         return publicHolidayRegistry.get().filter {
             it.isHoliday(date)
-        }.map {
+        }.plus(
+            originalHolidayRegistry.get().filter {
+                it.isHoliday(date)
+            }
+        ).map {
             Holiday(
                 name = it.holidayName(date),
                 date = date
@@ -50,5 +56,13 @@ class JPHoliday {
         }
 
         return holidays.toList()
+    }
+
+    fun registerOriginalHoliday(originalHoliday: HolidayInterface) {
+        originalHolidayRegistry.set(originalHoliday)
+    }
+
+    fun unregisterOriginalHoliday(originalHoliday: HolidayInterface) {
+        originalHolidayRegistry.remove(originalHoliday)
     }
 }
